@@ -1,0 +1,152 @@
+
+Era GAME back-end API
+
+Based of 4 action which includes check of game status.
+
+
+Action 1.: Create new game 
+
+Endpoint: /newgame
+Response: 
+{
+    "success": true,
+    "game_id": "3p40paa87x90",
+    "remaining_stones": 16,
+    "game_info": 
+    "board": {
+        "11": null,
+        "12": null,
+        "13": null,
+        "14": null,
+        "21": null,
+        "22": null,
+        "23": null,
+        "24": null,
+        "31": null,
+        "32": null,
+        "33": null,
+        "34": null,
+        "41": null,
+        "42": null,
+        "43": null,
+        "44": null
+        },
+    "free_stones": ['1000', '1011', '0000', '0010', '0111', '1100', '1010', '0100', '0001', '0011', '0101', '1110', '1001', '0110', '1111', '1101'],
+    "status": "playing",
+
+}        
+
+success = connection to server and request-response cycle was successful
+
+
+Action 2.: Player (P1) gives a stone to computer (P2)  for e.g. '1111'   
+           Computer randomly places stone from player for e.g. '1111' on (random) positie '11'
+
+Endpoint: POST /game/<id>/player-give-stone-to-computer
+
+Response: 
+{
+    "success": true,
+    "game_id": "3p40paa87x90",
+    "remaining_stones": 15,
+    "game_info": 
+    "board": {
+        "11": '1111',
+        "12": null,
+        "13": null,
+        "14": null,
+        "21": null,
+        "22": null,
+        "23": null,
+        "24": null,
+        "31": null,
+        "32": null,
+        "33": null,
+        "34": null,
+        "41": null,
+        "42": null,
+        "43": null,
+        "44": null}
+    "free_stones": ['1000', '1011', '0000', '0010', '0111', '1100', '1010', '0100', '0001', '0011', '0101', '1110', '1001', '0110', '1111', '1101'],
+    "status": "playing",
+    "stone_for_computer": "1111",
+    "computer_last_move": {
+    "stone": "1111",
+    "field": 11
+  }
+}   
+
+
+Action 3.: Computer randomly give stone to player for e.g. '0000'
+
+Endpoint: POST /game/<id>/computer-give-stone-to-player
+Response: 
+
+{
+    "success": true,
+    "game_id": "3p40paa87x90",
+    "remaining_stones": 14,
+    "game_info": 
+    "board": {
+        "11": '1111',
+        "12": null,
+        "13": null,
+        "14": null,
+        "21": null,
+        "22": null,
+        "23": null,
+        "24": null,
+        "31": null,
+        "32": null,
+        "33": null,
+        "34": null,
+        "41": null,
+        "42": null,
+        "43": null,
+        "44": null}
+    "free_stones": ['1000', '1011', '0000', '0010', '0111', '1100', '1010', '0100', '0001', '0011', '0101', '1110', '1001', '0110', '1111', '1101'],
+    "status": "playing",
+    "stone_for_computer": "0000",
+}   
+
+
+Action 4.: Player place stone '000' on the board for e.g. 12
+Endpoint: POST /game/<id>/player-place-stone
+Response: 
+
+{
+    "success": true,
+    "game_id": "3p40paa87x90",
+    "remaining_stones": 14,
+    "game_info": 
+    "board": {
+        "11": '1111',
+        "12": '0000',
+        "13": null,
+        "14": null,
+        "21": null,
+        "22": null,
+        "23": null,
+        "24": null,
+        "31": null,
+        "32": null,
+        "33": null,
+        "34": null,
+        "41": null,
+        "42": null,
+        "43": null,
+        "44": null}
+    "free_stones": ['1000', '1011', '0000', '0010', '0111', '1100', '1010', '0100', '0001', '0011', '0101', '1110', '1001', '0110', '1111', '1101'],
+    "status": "playing",
+    "stone_for_computer": "1111",
+    "player_last_move": {
+    "stone": "1111",
+    "field": 12
+  }
+}   
+
+
+
+
+
+

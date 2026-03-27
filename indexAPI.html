@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test fetch</title>
+</head>
+<body>
+
+<button onclick="sendData()">Send POST</button>
+
+<script>
+function sendData() {
+  fetch("http://127.0.0.1:8000/games", {
+  method: "POST"
+})
+  .then(response => response.json())
+  .then(data => console.log(data));
+}
+</script>
+
+</body>
+</html>

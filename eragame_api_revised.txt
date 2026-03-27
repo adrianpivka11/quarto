@@ -1,0 +1,119 @@
+ERA GAME REST API (REVISED)
+
+Base URL:
+/games
+
+--------------------------------------------------
+1. CREATE NEW GAME
+--------------------------------------------------
+POST /games
+
+Response:
+{
+  "success": true,
+  "game_id": "abc123",
+  "state": {
+    "board": {
+      "11": null, "12": null, "13": null, "14": null,
+      "21": null, "22": null, "23": null, "24": null,
+      "31": null, "32": null, "33": null, "34": null,
+      "41": null, "42": null, "43": null, "44": null
+    },
+    "free_stones": ["0000","0001","0010","0011","0100","0101","0110","0111",
+                    "1000","1001","1010","1011","1100","1101","1110","1111"],
+    "remaining_stones": 16,
+    "status": "playing",
+    "stone_for_player": null,
+    "last_move": null
+  }
+}
+
+--------------------------------------------------
+2. GET GAME STATE
+--------------------------------------------------
+GET /games/{game_id}
+
+Response:
+{
+  "success": true,
+  "game_id": "abc123",
+  "state": { ... same structure as above ... }
+}
+
+--------------------------------------------------
+3. PLAYER GIVES STONE TO COMPUTER
+--------------------------------------------------
+POST /games/{game_id}/give-stone
+
+Request:
+{
+  "chosen_stone": "0100"
+}
+
+Server actions:
+- remove stone from free_stones
+- computer places stone
+- check game status
+- if playing → computer chooses new stone for player
+
+Response:
+{
+  "success": true,
+  "game_id": "abc123",
+  "state": {
+    "board": { ... },
+    "free_stones": [ ... ],
+    "remaining_stones": 14,
+    "status": "playing",
+    "stone_for_player": "1010",
+    "last_move": {
+      "player_action": "gave_stone",
+      "computer_move": {
+        "stone": "0100",
+        "field": 23
+      }
+    }
+  }
+}
+
+--------------------------------------------------
+4. PLAYER PLACES STONE
+--------------------------------------------------
+POST /games/{game_id}/place-stone
+
+Request:
+{
+  "stone": "1010",
+  "field": 12
+}
+
+Server actions:
+- place stone on board
+- check game status
+
+Response:
+{
+  "success": true,
+  "game_id": "abc123",
+  "state": {
+    "board": { ... },
+    "free_stones": [ ... ],
+    "remaining_stones": 13,
+    "status": "playing",
+    "stone_for_player": null,
+    "last_move": {
+      "player_move": {
+        "stone": "1010",
+        "field": 12
+      }
+    }
+  }
+}
+
+--------------------------------------------------
+STATUS VALUES
+--------------------------------------------------
+"playing"
+"computer wins"
+"player wins"
+"no winner"
