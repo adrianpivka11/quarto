@@ -43,7 +43,7 @@ Response:
 --------------------------------------------------
 3. PLAYER GIVES STONE TO COMPUTER
 --------------------------------------------------
-POST /games/{game_id}/give-stone
+POST /games/{game_id}/give-stone-to-computer
 
 Request:
 {

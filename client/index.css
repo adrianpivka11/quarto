@@ -1,0 +1,53 @@
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f1ea;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid red
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .rules {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .rules h2 {
+            text-align: center;
+        }
+
+        .game-modes {
+            margin-top: 20px;
+        }
+
+        .mode-button {
+            display: block;
+            width: 300px;
+            margin: 10px auto;
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #3a7dff;
+            color: white;
+            transition: 0.2s;
+        }
+
+        .mode-button:hover {
+            background-color: #2f63cc;
+        }
