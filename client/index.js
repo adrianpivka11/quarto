@@ -13,8 +13,6 @@ async function newGamePvC() {
         const gameId = data.game_id;
         console.log("gameId:", gameId);
 
-        testEl.innerHTML = gameId;
-
         // Presmerovanie na novu frontend stranku s query parametrom.
         // Live Server si vie otvorit game.html, lebo je to realny subor v projekte.
         window.location.href = `./game.html?id=${gameId}`;

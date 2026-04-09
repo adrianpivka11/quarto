@@ -1,0 +1,36 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 30px;
+}
+
+.stones-area {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  border: 1px solid red
+}
+
+.stone {
+  width: 100px;
+  height: 100px;
+  background-color: lightgray;
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+}
+
+.container {
+  width: 400px;
+  min-height: 150px;
+  border: 3px dashed black;
+  padding: 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* .container.dragover {
+  background-color: #f0f0f0;
+} */

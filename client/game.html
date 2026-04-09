@@ -3,81 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="game.css">
     <title>Quarto Game</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 24px;
-            background: #f5f6fa;
-            color: #1f2937;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        }
-
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .back-link {
-            text-decoration: none;
-            color: #2563eb;
-            font-weight: 600;
-        }
-
-        .status {
-            background: #eef2ff;
-            border: 1px solid #c7d2fe;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 20px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .cell {
-            min-height: 90px;
-            border: 2px dashed #cbd5e1;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f8fafc;
-            font-size: 14px;
-            text-align: center;
-            padding: 8px;
-        }
-
-        pre {
-            background: #111827;
-            color: #e5e7eb;
-            padding: 16px;
-            border-radius: 10px;
-            overflow-x: auto;
-        }
-
-        .error {
-            color: #b91c1c;
-            font-weight: 700;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -90,6 +17,22 @@
         <p>Toto je nová frontend stránka pre konkrétnu hru.</p>
 
         <div class="status" id="status-box">Načítavam dáta hry...</div>
+
+        <h2>Kamene</h2>
+        <div id="container-stones" class=""></div>
+
+        <h2>Hra</h2>
+        <div class="game-container">
+            <div>
+                <div id="stoneforcomputer" class="cell"></div>
+                <label for="stonefor">Stone for Computer</label>
+            </div>
+            <div>
+                <div id="stoneforplayer" class="cell"></div>
+                <label for="stonefor">Stone for Player</label>
+            </div>
+        </div>
+
 
         <h2>Hracia doska</h2>
         <div class="grid" id="board"></div>

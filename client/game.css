@@ -1,0 +1,276 @@
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 24px;
+            background: #f5f6fa;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .status {
+            background: #eef2ff;
+            border: 1px solid #c7d2fe;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+
+        .grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+                margin-top: 30px;
+                padding: 20px;
+                border-radius: 20px;
+
+                background: linear-gradient(
+                    135deg,
+                    #3e2a1f,
+                    #5a3b2a,
+                    #3a251a
+                );
+
+                box-shadow:
+                    inset 0 0 15px rgba(0, 0, 0, 0.6),
+                    0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .container-stones {
+            border: 2px solid red;
+            display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+                margin-top: 30px;
+                padding: 20px;
+                border-radius: 20px;
+                
+                background: linear-gradient(
+                    135deg,
+                    #3e2a1f,
+                    #5a3b2a,
+                    #3a251a
+                );
+
+                box-shadow:
+                    inset 0 0 15px rgba(0, 0, 0, 0.6),
+                    0 10px 30px rgba(0, 0, 0, 0.4);
+        
+        }
+
+        .game-container{
+            display: flex;
+            flex-direction: row;
+            gap: 40px;
+            border: 1px solid red;
+            justify-content: center;
+
+        }
+
+        #stoneforplayer{
+            background:#2563eb;
+            margin-bottom: 10px;
+            width: 100px;
+        }
+       
+        #stoneforcomputer{
+            background:#eb2556;
+            margin-bottom: 10px;
+            width: 100px;
+        }
+
+
+
+        .cell {
+             min-height: 90px;
+
+            /* jemná priehlbina */
+            background: radial-gradient(circle at 30% 30%, #b69f54, #e6dcc8);
+
+            border-radius: 4px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 14px;
+            text-align: center;
+            padding: 8px;
+
+            /* tieň pre depth */
+            box-shadow:
+                inset 2px 2px 6px rgba(0, 0, 0, 0.25),
+                inset -2px -2px 6px rgba(255, 255, 255, 0.2),
+                0 4px 8px rgba(0, 0, 0, 0.3);
+
+            /* odstránime dashed border */
+            border: none;
+
+            transition: all 0.2s ease;
+        }
+
+        .cell:hover {
+                transform: scale(1.05);
+
+                box-shadow:
+                inset 2px 2px 6px rgba(0, 0, 0, 0.3),
+                0 6px 14px rgba(0, 0, 0, 0.5);
+                }
+
+        pre {
+            background: #111827;
+            color: #e5e7eb;
+            padding: 16px;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+
+        .error {
+            color: #b91c1c;
+            font-weight: 700;
+        }
+    
+
+
+        /* základ kameňa */
+        .stone {
+            cursor:move;
+            user-select: none;
+            position: relative;
+            display: inline-block;
+            transition: all 0.2s ease;
+            box-shadow:
+                0 4px 10px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 5px rgba(255,255,255,0.2),
+                inset 2px 2px 5px rgba(0,0,0,0.6);
+        }
+
+        /* ------------------ */
+        /* COLOR */
+        /* ------------------ */
+
+        .white {
+            background: radial-gradient(circle at 30% 30%, #ffffff, #d6d1c4);
+        }
+
+        .black {
+            background: radial-gradient(circle at 30% 30%, #444, #000);
+        }
+
+        /* ------------------ */
+        /* SIZE */
+        /* ------------------ */
+
+        .large {
+            width: 60px;
+            height: 60px;
+        }
+
+        .small {
+            width: 40px;
+            height: 40px;
+        }
+
+        /* ------------------ */
+        /* SHAPE */
+        /* ------------------ */
+
+        .round {
+            border-radius: 50%;
+        }
+
+        .square {
+            border-radius: 8px;
+        }
+
+        
+        .plus::after, .minus::after {
+            content: "";
+            position: absolute;
+        }
+
+        .plus::after {
+        width: 50%;
+        height: 6px;
+        background: rgba(0,0,0,0.4);
+
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        
+        box-shadow:
+            inset 1px 1px 2px rgba(0,0,0,0.6),
+            inset -1px -1px 2px rgba(255,255,255,0.3);
+    }
+
+.plus::before {
+    content: "";
+    position: absolute;
+
+    width: 6px;
+    height: 50%;
+    background: rgba(0,0,0,0.4);
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    box-shadow:
+        inset 1px 1px 2px rgba(0,0,0,0.6),
+        inset -1px -1px 2px rgba(255,255,255,0.3);
+}
+
+.minus::after {
+    width: 50%;
+    height: 6px;
+    background: rgba(0,0,0,0.4);
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    box-shadow:
+        inset 1px 1px 2px rgba(0,0,0,0.6),
+        inset -1px -1px 2px rgba(255,255,255,0.3);
+}
+
+
+
+        
+
+        /* ------------------ */
+        /* INTERAKCIA */
+        /* ------------------ */
+
+        .stone:hover {
+            transform: scale(1.08);
+        }
+
+        .stone:active {
+            transform: scale(0.95);
+            box-shadow:
+                inset 2px 2px 6px rgba(0,0,0,0.6);
+        }

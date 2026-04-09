@@ -1,0 +1,16 @@
+
+
+
+
+
+Front-end logic and algorithms
+
+1. Load index.html with rules of games and two buttons to choose game style a. Player vs Computer or b. Player vs Player
+
+2. if a. is chosen, then POST request - to create game
+3. change of URL with game.html + game id which
+4. game.js use load() to load new game by:
+        - fetch() data - stones and board
+        - render board and stones based on this date
+        - initialize Drag & Drop functionality for each stone and cell of the board 
+

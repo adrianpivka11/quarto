@@ -186,7 +186,7 @@ class QuartoGame:
              self.status = "playing"
              self.stone_for_player = self.random_take()
         self.last_move = {"player_action": "gave_stone",
-                          "compute move": placing_stone_by_computer}
+                          "computer_move": placing_stone_by_computer}
     
 
     """ METHOD TO place stone from computer by player 
@@ -208,7 +208,6 @@ class QuartoGame:
         """
         stone = request.stone
         field = request.field
-        self.free_stones.remove(stone)
         self.board[field] = stone
         hasPlayer_won = self.check_game_state()
         if hasPlayer_won:
@@ -227,7 +226,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://127.0.0.1:5500",
+        "http://localhost:5500",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
