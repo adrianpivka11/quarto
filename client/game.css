@@ -90,13 +90,13 @@
 
         }
 
-        #stoneforplayer{
+        #stoneforplayer, #player2dropzone{
             background:#2563eb;
             margin-bottom: 10px;
             width: 100px;
         }
        
-        #stoneforcomputer{
+        #stoneforcomputer, #player1dropzone{
             background:#eb2556;
             margin-bottom: 10px;
             width: 100px;

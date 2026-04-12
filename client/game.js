@@ -108,6 +108,7 @@ function renderGame(data) {
     renderStoneForPlayer(data);
 }
 
+
 function resetDropZones() {
     const boardCells = document.querySelectorAll("#board .cell");
 
@@ -286,15 +287,34 @@ async function placeStoneOnBoard(e) {
 
 
 function setupPhase(data) {
-    if (data.state.stone_for_player === null) {
-        let message = 'Hráč dáva kameň počítaču';
-        statusBox.innerHTML = message;
-        console.log(message);
+    const status = data.state.status;
+    const stoneForPlayer = data.state.stone_for_player;
+
+    if (status === 'player wins') {
+        statusBox.innerHTML = 'Hráč vyhral';
+        return;
+    }
+
+    if (status === 'computer wins') {
+        statusBox.innerHTML = 'Počítač vyhral';
+        return;
+    }
+
+    if (status === 'no winner') {
+        statusBox.innerHTML = 'Remíza - nikto nevyhral';
+        return;
+    }
+
+    if (status !== 'playing') {
+        console.error('Unknown game status:', status);
+        return;
+    }
+
+    if (stoneForPlayer === null) {
+        statusBox.innerHTML = 'Hráč dáva kameň počítaču';
         enableGiveStonePhase();
     } else {
-        let message = 'Počítač dal kameň hráčovi, hráč ho ukladá na dosku';
-        statusBox.innerHTML = message;
-        console.log(message);
+        statusBox.innerHTML = 'Počítač dal kameň hráčovi, hráč ho ukladá na dosku';
         enablePlaceStonePhase();
     }
 }
@@ -322,38 +342,6 @@ loadGame();
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function initializeDragAndDrop() {
-//     const stones = document.querySelectorAll(".stone");
-//     const cells = document.querySelectorAll(".cell");
-
-//     console.log("stones:", stones);
-//     console.log("cells:", cells);
-
-//     stones.forEach(function (stone) {
-//         stone.addEventListener("dragstart", handleDragStart);
-//         stone.addEventListener("dragend", handleDragEnd);
-//     });
-
-//     cells.forEach(function (cell) {
-//         cell.addEventListener("dragover", handleDragOver);
-//         cell.addEventListener("dragenter", handleDragEnter);
-//         cell.addEventListener("dragleave", handleDragLeave);
-//         cell.addEventListener("drop", handleDrop);
-//     });
-// }
 
 
 

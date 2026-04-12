@@ -5,6 +5,9 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
 
+
+
+
 class QuartoGame:
     
     def __init__(self):
@@ -211,16 +214,87 @@ class QuartoGame:
         self.board[field] = stone
         hasPlayer_won = self.check_game_state()
         if hasPlayer_won:
-            self.status = "Player wins"
-            
+            self.status = "player wins"
+
+        elif not self.free_stones:
+            self.status = "no winner"
+
         else:
             self.status = "playing"
         self.stone_for_player =  None
         self.last_move ={"player_move": request 
                                         }
 
-    
 
+
+class QuartoGamePvP(QuartoGame):
+    def __init__(self):
+        super().__init__()  
+        self.player1_action = None 
+        self.player2_action = None 
+
+    def get_state(self) -> dict:
+        return {
+            "board": self.board,
+            "free_stones": list(self.free_stones),
+            "remaining_stones": len(self.free_stones),
+            "status": self.status,
+            "player1_action" : self.player1_action,
+            "player2_action" : self.player2_action,
+            "last_move": self.last_move,
+        }
+    
+    def place_stone(self, request: BaseModel):
+        """_summary_
+            Transforms JSON request body message by Pydantic Basemodel
+            Add the stone to the board field, delete the stone from free_stones
+            Check the game state if Player 2 has won
+            Update the state of the game
+
+        Args:
+            request (BaseModel): {"stone": "0100", 
+                                  "field": 23,
+                                  "player1_action": "placed_stone",
+                                  "player2_action": "gave_stone"}
+
+        Returns:
+            _type_: _description_
+        """
+        self.last_move = request 
+        self.player1_action, self.player2_action = request.player1_action, request.player2_action
+        stone, field = request.stone, request.field
+
+
+        #    Phase 1 - player2 gave_stone, player1 placed_stone
+        if self.player1_action == "placed_stone":
+            self.board[field] = stone
+            self.free_stones.remove(stone)
+            hasPlayer1_won = self.check_game_state()
+            if hasPlayer1_won:
+                self.status = "player1 wins"
+
+            elif not self.free_stones:
+                self.status = "no winner"
+            else:
+                self.status = "playing"
+            self.last_move ={"player1_move": request 
+                                            }
+
+        #    Phase 2 - player1 gave_stone, player2 placed_stone    
+        else:
+            self.board[field] = stone
+            self.free_stones.remove(stone)
+            hasPlayer2_won = self.check_game_state()
+            if hasPlayer2_won:
+                self.status = "player2 wins"
+
+            elif not self.free_stones:
+                self.status = "no winner"
+            else:
+                self.status = "playing"
+            
+                                            
+             
 
 app = FastAPI()
 
@@ -244,6 +318,12 @@ class GiveStoneRequest(BaseModel):
 class PlaceStoneRequest(BaseModel):
     stone: str
     field: int
+
+class PlaceStoneRequestPvP(BaseModel):
+    stone: str
+    field: int
+    player1_action: str
+    player2_action: str
 
 
 
@@ -297,6 +377,55 @@ def give_stone_to_computer(game_id: str, request: GiveStoneRequest):
 
 @app.post("/games/{game_id}/place-stone") 
 def place_stone(game_id: str, request: PlaceStoneRequest):
+    if game_id not in games:
+        raise HTTPException(status_code=404, detail="Game not found")
+    
+    game = games[game_id] 
+    game.place_stone(request)
+    
+    return {
+        "success": True,
+        "game_id": game_id,
+        "state":  game.get_state(),
+    }
+
+
+
+""" PvP  Endpoints and FAST API """
+
+@app.post("/gamespvp")
+def create_game():
+    print("1. endpoint start")
+    game = QuartoGamePvP()
+    print(game.__dict__)
+    game_id = game.create_new_game_id()
+
+    games[game_id] = game
+    
+    return {
+        "success": True,
+        "game_id": game_id,
+        "state": game.get_state(),
+    }
+
+
+@app.get("/gamespvp/{game_id}")
+def get_game(game_id: str):
+
+    if game_id not in games:
+        raise HTTPException(status_code=404, detail="Game not found")
+    
+    game = games[game_id]
+    print(game)
+    return {
+        "success": True,
+        "game_id": game_id,
+        "state":  game.get_state(),
+    }
+
+
+@app.post("/gamespvp/{game_id}/place-stone") 
+def place_stone(game_id: str, request: PlaceStoneRequestPvP):
     if game_id not in games:
         raise HTTPException(status_code=404, detail="Game not found")
     

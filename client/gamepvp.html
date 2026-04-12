@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="game.css">
+    <title>Quarto Game</title>
+</head>
+<body>
+    <div class="container">
+        <div class="topbar">
+            <a class="back-link" href="./index.html">← Späť na výber režimu</a>
+            <div id="game-id-label">Game ID: načítava sa...</div>
+        </div>
+
+        <h1>Quarto Game</h1>
+        <p>Toto je nová frontend stránka pre konkrétnu hru.</p>
+
+        <div class="status" id="status-box">Načítavam dáta hry...</div>
+
+        <h2>Kamene</h2>
+        <div id="container-stones" class=""></div>
+
+        <h2>Hra</h2>
+        <div class="game-container">
+            <div>
+                <div id="player1dropzone" class="cell"></div>
+                <label for="stonefor">Stone for Player 1</label>
+            </div>
+            <div>
+                <div id="player2dropzone" class="cell"></div>
+                <label for="stonefor">Stone for Player 2</label>
+            </div>
+        </div>
+
+
+        <h2>Hracia doska</h2>
+        <div class="grid" id="board"></div>
+
+        <h2>Raw JSON zo servera</h2>
+        <pre id="game-json">Čakám na odpoveď zo servera...</pre>
+    </div>
+
+    <script src="gamepvp.js" type="module"></script>
+</body>
+</html>
