@@ -117,3 +117,143 @@ STATUS VALUES
 "computer wins"
 "player wins"
 "no winner"
+
+
+
+--------------------------------------------------
+            PLAYER vs PLAYER  API
+--------------------------------------------------
+
+ERA GAME REST API (REVISED)
+
+Base URL:
+/gamespvp
+
+
+--------------------------------------------------
+1. CREATE NEW GAME
+--------------------------------------------------
+POST /gamespvp
+
+Response:
+{
+  "success": true,
+  "game_id": "a0f7908c-7bc4-4d91-b541-a348a6330315",
+  "state": {
+    "board": {
+      "11": null,
+      "12": null,
+      "13": null,
+      "14": null,
+      "21": null,
+      "22": null,
+      "23": null,
+      "24": null,
+      "31": null,
+      "32": null,
+      "33": null,
+      "34": null,
+      "41": null,
+      "42": null,
+      "43": null,
+      "44": null
+    },
+    "free_stones": [
+      "0111",
+      "1011",
+      "1001",
+      "1000",
+      "1110",
+      "0011",
+      "0000",
+      "0110",
+      "1100",
+      "0100",
+      "0010",
+      "1010",
+      "1101",
+      "1111",
+      "0101",
+      "0001"
+    ],
+    "remaining_stones": 16,
+    "status": "playing",
+    "player1_action": null,
+    "player2_action": null,
+    "last_move": null
+  }
+}
+
+
+
+--------------------------------------------------
+4. PLAYER PLACES STONE
+--------------------------------------------------
+POST /games/{game_id}/place-stone
+
+Request:
+ { "stone": "0011",
+    "field": 12,
+    "player1_action": "placed_stone",
+    "player2_action": "gave_stone"
+      }
+
+Server actions:
+- place stone on board
+- check game status
+
+
+
+{
+  "success": true,
+  "game_id": "a0f7908c-7bc4-4d91-b541-a348a6330315",
+  "state": {
+    "board": {
+      "11": null,
+      "12": "0011",
+      "13": null,
+      "14": null,
+      "21": null,
+      "22": null,
+      "23": null,
+      "24": null,
+      "31": null,
+      "32": null,
+      "33": null,
+      "34": null,
+      "41": null,
+      "42": null,
+      "43": null,
+      "44": null
+    },
+    "free_stones": [
+      "0111",
+      "1011",
+      "1001",
+      "1000",
+      "1110",
+      "0000",
+      "0110",
+      "1100",
+      "0100",
+      "0010",
+      "1010",
+      "1101",
+      "1111",
+      "0101",
+      "0001"
+    ],
+    "remaining_stones": 15,
+    "status": "playing",
+    "player1_action": "placed_stone",
+    "player2_action": "gave_stone",
+    "last_move": {
+      "player1_move": {
+        "stone": "0011",
+        "field": 12,
+        "player1_action": "placed_stone",
+        "player2_action": "gave_stone"
+      }
+    }
+  }
+}
