@@ -1,6 +1,5 @@
 const quartoURL = "http://127.0.0.1:8000/games";
 const statusBox = document.getElementById("status-box");
-const gameJsonEl = document.getElementById("game-json");
 const boardEl = document.getElementById("board");
 const gameIdLabel = document.getElementById("game-id-label");
 const containerStonesEl = document.getElementById("container-stones")
@@ -177,8 +176,7 @@ async function loadGame() {
     console.log("ID z URL:", gameId);
 
     if (!gameId) {
-        statusBox.innerHTML = '<span class="error">V URL chýba parameter id.</span>';
-        gameJsonEl.textContent = "Bez game id neviem načítať dáta.";
+        statusBox.innerHTML = '<span class="error">A parameter id is missing in URL.</span>';
         return;
     }
 
@@ -188,12 +186,11 @@ async function loadGame() {
         const response = await fetch(`${quartoURL}/${gameId}`);
 
         if (!response.ok) {
-            throw new Error(`HTTP chyba ${response.status}`);
+            throw new Error(`HTTP error ${response.status}`);
         }
 
         const data = await response.json();
         console.log("Načítané dáta hry:", data)
-        gameJsonEl.textContent = JSON.stringify(data, 0, 2)
         renderGame(data)
         setupPhase(data)
         
@@ -204,8 +201,7 @@ async function loadGame() {
     
     catch (error) {
         console.error("Chyba pri načítaní hry:", error);
-        statusBox.innerHTML = `<span class="error">Nepodarilo sa načítať hru: ${error.message}</span>`;
-        gameJsonEl.textContent = error.stack || String(error);
+        statusBox.innerHTML = `<span class="error">Loading game not successful: ${error.message}</span>`;
         renderBoard({});}
         
     
@@ -238,7 +234,7 @@ async function giveStoneToComputer(e) {
 
     const data = await response.json();
     console.log("Načítané dáta hry:", data);
-    gameJsonEl.textContent = JSON.stringify(data, null, 2);
+   
 
     renderGame(data);
     setupPhase(data);
@@ -277,7 +273,7 @@ async function placeStoneOnBoard(e) {
 
     const data = await response.json();
     console.log("Response place-stone:", data);
-    gameJsonEl.textContent = JSON.stringify(data, null, 2);
+    
 
     renderGame(data);
     setupPhase(data);
@@ -291,17 +287,17 @@ function setupPhase(data) {
     const stoneForPlayer = data.state.stone_for_player;
 
     if (status === 'player wins') {
-        statusBox.innerHTML = 'Hráč vyhral';
+        statusBox.innerHTML = 'Player has won!';
         return;
     }
 
     if (status === 'computer wins') {
-        statusBox.innerHTML = 'Počítač vyhral';
+        statusBox.innerHTML = 'Computer has won!';
         return;
     }
 
     if (status === 'no winner') {
-        statusBox.innerHTML = 'Remíza - nikto nevyhral';
+        statusBox.innerHTML = 'No winner.';
         return;
     }
 
@@ -311,10 +307,10 @@ function setupPhase(data) {
     }
 
     if (stoneForPlayer === null) {
-        statusBox.innerHTML = 'Hráč dáva kameň počítaču';
+        statusBox.innerHTML = `Player is giving a stone to Computer, Computer placing the stone.`;
         enableGiveStonePhase();
     } else {
-        statusBox.innerHTML = 'Počítač dal kameň hráčovi, hráč ho ukladá na dosku';
+        statusBox.innerHTML = `Computer is given the stone to Player, Player placing.`;
         enablePlaceStonePhase();
     }
 }

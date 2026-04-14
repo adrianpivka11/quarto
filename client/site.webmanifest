@@ -1,0 +1,13 @@
+{"name":"Quarto",
+"short_name":"Quarto",
+"icons":[
+        {"src":"/android-chrome-192x192.png",
+         "sizes":"192x192",
+         "type":"image/png"},
+         {"src":"/android-chrome-512x512.png",
+         "sizes":"512x512",
+         "type":"image/png"}],
+
+"theme_color":"#6b4a2f",
+"background_color":"#e4d7bb",
+"display":"standalone"}

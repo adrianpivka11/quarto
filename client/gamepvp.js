@@ -1,6 +1,5 @@
 const quartoURL = "http://127.0.0.1:8000/gamespvp";
 const statusBox = document.getElementById("status-box");
-const gameJsonEl = document.getElementById("game-json");
 const boardEl = document.getElementById("board");
 const gameIdLabel = document.getElementById("game-id-label");
 const containerStonesEl = document.getElementById("container-stones")
@@ -219,7 +218,7 @@ async function place(e, messageJSON){
 
     const data = await response.json();
     console.log("Response place-stone:", data);
-    gameJsonEl.textContent = JSON.stringify(data, null, 2);
+    
 
     renderGame(data);
     setupPhase(data);
@@ -234,8 +233,8 @@ function setupPhase(data) {
     let player1Action = data.state.player1_action;
     let player2Action = data.state.player2_action;
     const rs = data.state.remaining_stones
-    console.log(data.player1_action)
-    console.log(data.player2_action)
+    console.log(data.state.player1_action)
+    console.log(data.state.player2_action)
     console.log(status)
     console.log(rs)
 
@@ -248,17 +247,17 @@ function setupPhase(data) {
 
 
     if (status === "player1 wins") {
-        statusBox.innerHTML = "Hráč 1 vyhral";
+        statusBox.innerHTML = "Player 1 has won!";
         return;
     }
 
     if (status === "player2 wins") {
-        statusBox.innerHTML = "Hráč 2 vyhral";
+        statusBox.innerHTML = "Player 2 has won!";
         return;
     }
 
     if (status === "no winner") {
-        statusBox.innerHTML = "Remíza - nikto nevyhral";
+        statusBox.innerHTML = "No winner.";
         return;
     }
 
@@ -268,19 +267,19 @@ function setupPhase(data) {
     }
 
     if (player1Action === null && player2Action === null) {
-        statusBox.innerHTML = "Player 2 dáva kameň Playeru 1 a ten ho pokladá";
+        statusBox.innerHTML = `Player 2 is giving a stone to Player 1, Player 1 placing the stone.`;
         console.log("Fáza 1");
         enablePhaseOne();
         return;
     }
 
     if (player1Action === "placed_stone") {
-        statusBox.innerHTML = "Player 1 dáva kameň Player 2 a ten ho pokladá";
+        statusBox.innerHTML = "Player 1 is giving a stone to Player 2, Player 2 placing the stone.";
         enablePhaseTwo();
         return;
     }
 
-    statusBox.innerHTML = "Player 2 dáva kameň Player 1 a ten ho pokladá";
+    statusBox.innerHTML = "Player 2 is giving a stone to Player 1, Player 1 placing the stone.";
     enablePhaseOne();
 }
 
@@ -294,7 +293,6 @@ async function loadGame() {
 
     if (!gameId) {
         statusBox.innerHTML = '<span class="error">V URL chýba parameter id.</span>';
-        gameJsonEl.textContent = "Bez game id neviem načítať dáta.";
         return;
     }
 
@@ -309,7 +307,6 @@ async function loadGame() {
 
         const data = await response.json();
         console.log("Načítané dáta hry:", data)
-        gameJsonEl.textContent = JSON.stringify(data, 0, 2)
         renderGame(data)
         setupPhase(data)
         
@@ -321,7 +318,6 @@ async function loadGame() {
     catch (error) {
         console.error("Chyba pri načítaní hry:", error);
         statusBox.innerHTML = `<span class="error">Nepodarilo sa načítať hru: ${error.message}</span>`;
-        gameJsonEl.textContent = error.stack || String(error);
         renderBoard({});}
         
     

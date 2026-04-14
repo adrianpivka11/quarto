@@ -1,48 +1,50 @@
 <html>
     <head>
         <link rel="stylesheet" href="index.css">
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
     </head>
     <body>
-        <div class="container">
-            <h1>Quarto Game</h1>
-            <p id="test-loader">Test text</p>
-            <div class="rules">
-                <h2>Rules of the Game</h2>
-                <p>
-                    Quarto is a strategy board game played on a 4x4 grid. There are 16 unique pieces,
-                    each with four different attributes:
-                </p>
-                <ul>
-                    <li>Color: red or blue</li>
-                    <li>Size: large or small</li>
-                    <li>Shape: round or square</li>
-                    <li>Fill: solid or hollow</li>
-                </ul>
-                <p>
-                    Players take turns placing pieces on the board. However, you do not choose your own piece.
-                    Instead, your opponent selects which piece you must play.
-                </p>
-                <p>
-                    The goal is to create a line of four pieces (horizontal, vertical, or diagonal)
-                    that share at least one common attribute.
-                </p>
-                <p>
-                    The player who completes such a line wins the game.
-                </p>
-            </div>
+        <div class="menu-page">
+            <div class="menu-overlay"></div>
 
-            <div class="game-modes">
-                <h2>Choose Game Mode</h2>
+            <main class="menu-panel">
+                <h1 class="menu-title">Quarto Game</h1>
 
-                <button class="mode-button" id="startPvC-button">
-                    Player vs Computer
-                </button>
+                <section class="rules-card">
+                    <h2>Rules of the Game</h2>
+                    <p>
+                        Quarto is a strategy board game played on a 4x4 grid. There are 16 unique pieces, each with four different attributes:
+                    </p>
+                    <ul>
+                        <li>Color: black or white</li>
+                        <li>Size: large or small</li>
+                        <li>Shape: round or square</li>
+                        <li>Symbol: (+) or (-)</li>
+                    </ul>
+                    <p>
+                        Players take turns placing pieces on the board. However, you do not choose your own piece. Instead, your opponent selects which piece you must play.
+                    </p>
+                    <p>
+                        The goal is to create a line of four pieces (horizontal, vertical, or diagonal) that share at least one common attribute.
+                    </p>
+                    <p>
+                        The player who completes such a line wins the game.
+                    </p>
+                </section>
 
-                <button class="mode-button" id="startPvP-button">
-                    Player vs Player
-                </button>
-            </div>
+                <section class="menu-actions">
+                    <h2>Choose Game Mode</h2>
+                    <div class="button-group">
+                        <button class="zen-button" id="startPvC-button">Player vs Computer</button>
+                        <button class="zen-button zen-button-secondary" id="startPvP-button">Player vs Player</button>
+                    </div>
+                </section>
+            </main>
         </div>
+        
         <script src="index.js" type='module'></script>
     </body>
 </html>
