@@ -6,9 +6,14 @@ const testEl = document.getElementById("test-loader");
 
 async function newGamePvC() {
     try {
-        const res = await fetch(quartoURL, { method: "POST" });
-        const data = await res.json();
 
+        console.log("Posielam request na:", quartoURL);
+        const res = await fetch(quartoURL, { method: "POST" });
+        
+        console.log("Response status:", res.status);
+        console.log("Response ok:", res.ok);
+        
+        const data = await res.json();
         console.log("Odpoveď zo servera:", data);
 
         const gameId = data.game_id;
