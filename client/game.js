@@ -13,7 +13,58 @@ function getGameIdFromURL() {
 }
 
 
+
+async function loadGame() {
+    // main function that runs all Front-end
+    // getGameIdFromURL() and based on game id makes request on server to get data for renderGame(data) and setupPhase(data)
+    
+    // 1. Get game id
+    const gameId = getGameIdFromURL();
+    console.log("ID z URL:", gameId);
+
+    // 2. request game DATA from server based on id
+    if (!gameId) {
+        statusBox.innerHTML = '<span class="error">A parameter id is missing in URL.</span>';
+        return;
+    }
+
+    gameIdLabel.textContent = `Game ID: ${gameId}`; 
+
+    try {
+        const response = await fetch(`${quartoURL}/${gameId}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Načítané dáta hry:", data)
+       
+        // 3.Use fetch data to render static HTML and CSS elements - board and stones
+        renderGame(data)  
+        // 4. Make DOM interactive - addEventListeners for drag & drop, callback functions
+        setupPhase(data)
+        
+       } 
+    
+    catch (error) {
+        console.error("Chyba pri načítaní hry:", error);
+        statusBox.innerHTML = `<span class="error">Loading game not successful: ${error.message}</span>`;
+        renderBoard({});}   
+    
+    }
+
+
+
+
+
+
+
+
 function renderBoard(data) {
+    // Args: fetched data
+    // based on fetch data render board with empty cells each with unique id
+    // if board data contains stones, build stone by buildStoneElementforBoard() and append it as child element to the cell that belongs
     boardEl.innerHTML = ""
     let stringForBoard = ``
     const boardJSON = data.state.board 
@@ -36,6 +87,7 @@ function renderBoard(data) {
     }}
 
 function renderStones(data) {
+    // just render stones:) by using buildStoneHTMLstring()
     containerStonesEl.innerHTML = "";
     const stonesJSON = data.state.free_stones;
     let stringForStones = ``;
@@ -49,6 +101,9 @@ function renderStones(data) {
 
 
 function buildStoneHTMLstring(stone) {
+    // Args: stone e.g. "1101"
+    // build stones based on id of stone e.g. "1101". by adding css classes
+    // Returns: string `<div class="stone white small round minus" id="1101"></div>`
     let klass = `stone`;
 
     if (stone[0] === "0") klass += ` black`;
@@ -63,11 +118,14 @@ function buildStoneHTMLstring(stone) {
     if (stone[3] === "0") klass += ` plus`;
     else klass += ` minus`;
 
-    return `<div class="${klass}" id="${stone}" draggable="true"></div>`;
+    return `<div class="${klass}" id="${stone}"></div>`;
 }
 
 
 function buildStoneElementforBoard(stone) {
+    // if stone is already placed, this function is used
+    // Args: stone e.g. "1101"
+    // Returns:  HTMLDivElement <div class="stone white small round minus" id="1101"></div>
     let klass = `stone`;
 
     if (stone[0] === "0") klass += ` black`;
@@ -90,6 +148,8 @@ function buildStoneElementforBoard(stone) {
 }
 
 function renderStoneForPlayer(data) {
+    // Args: fetched data
+    // Renders stone that Computer gave to player on back-end randomly
     playerField.innerHTML = "";
 
     const stoneObject = data.state.stone_for_player;
@@ -101,6 +161,9 @@ function renderStoneForPlayer(data) {
 }
 
 
+
+
+//  Use fetch data to render static HTML and CSS elements - board and stones
 function renderGame(data) {
     renderStones(data);
     renderBoard(data);
@@ -108,30 +171,59 @@ function renderGame(data) {
 }
 
 
-function resetDropZones() {
-    const boardCells = document.querySelectorAll("#board .cell");
 
-    computerField.replaceWith(computerField.cloneNode(true));
-    playerField.replaceWith(playerField.cloneNode(true));
 
-    const newComputerField = document.getElementById("stoneforcomputer");
-    const newPlayerField = document.getElementById("stoneforplayer");
+// Make DOM interactive - addEventListeners for drag & drop, callback functions
+function setupPhase(data) {
+    // based on fetched data set Phase 1 or Phase 2 if status === "playing"
+    // if status is "player wins", "commputer wins", "no winner", the game stops and status is being rendered
+    const status = data.state.status;
+    const stoneForPlayer = data.state.stone_for_player;
+   
+    
 
-    boardCells.forEach(cell => {
-        cell.replaceWith(cell.cloneNode(true));
-    });
+    if (status === 'player wins') {
+        statusBox.innerHTML = 'Player has won!';
+        return;
+    }
 
-    return {
-        computerField: newComputerField,
-        playerField: newPlayerField,
-        boardCells: document.querySelectorAll("#board .cell")
-    };
+    if (status === 'computer wins') {
+        statusBox.innerHTML = 'Computer has won!';
+        return;
+    }
+
+    if (status === 'no winner') {
+        statusBox.innerHTML = 'No winner.';
+        return;
+    }
+
+    if (status !== 'playing') {
+        console.error('Unknown game status:', status);
+        return;
+    }
+
+    if (stoneForPlayer === null) {
+        statusBox.innerHTML = `Player is giving a stone to Computer, Computer placing the stone.`;
+        enableGiveStonePhase();
+    } else {
+        statusBox.innerHTML = `Computer is given the stone to Player, Player placing.`;
+        enablePlaceStonePhase();
+    }
 }
 
 
+
+
 function enableGiveStonePhase() {
+    // removes addEventListeners by  to prevent duplicit addEventListeners in following rounds of game
+    // add drag & drop functionality to Stones and computerField
+    // dropping stone calls back function giveStoneToComputer()
+
+    console.log('PHASE ONE JUST BEGUN')
+    
+
     const stones = document.querySelectorAll("#container-stones .stone");
-    const computerDrop = document.getElementById("stoneforcomputer");
+    
 
     stones.forEach(stone => {
         stone.draggable = true;
@@ -139,14 +231,29 @@ function enableGiveStonePhase() {
         stone.addEventListener("dragend", handleDragEnd);
     });
 
-    computerDrop.addEventListener("dragover", handleDragOver);
-    computerDrop.addEventListener("dragenter", handleDragEnter);
-    computerDrop.addEventListener("dragleave", handleDragLeave);
-    computerDrop.addEventListener("drop", giveStoneToComputer);
+    enableComputerField()
+    console.log(computerField)
+}
+
+function enableComputerField() {
+    computerField.addEventListener("dragover", handleDragOver);
+    computerField.addEventListener("dragenter", handleDragEnter);
+    computerField.addEventListener("dragleave", handleDragLeave);
+    computerField.addEventListener("drop", giveStoneToComputer);
 }
 
 
+
 function enablePlaceStonePhase() {
+    // removes addEventListeners by  to prevent duplicit addEventListeners in following rounds of game
+    // add drag & drop functionality to playerStone 
+    // add drag & drop functionality to cells on board
+    // dropping stone calls back function placeStoneOnBuard()
+    
+    
+    console.log('PHASE TWO JUST BEGUN')
+   
+
     const playerStone = document.querySelector("#stoneforplayer .stone");
     const boardCells = document.querySelectorAll("#board .cell");
 
@@ -157,62 +264,29 @@ function enablePlaceStonePhase() {
     }
 
     boardCells.forEach(cell => {
+        if (!cell.firstChild){
         cell.addEventListener("dragover", handleDragOver);
         cell.addEventListener("dragenter", handleDragEnter);
         cell.addEventListener("dragleave", handleDragLeave);
         cell.addEventListener("drop", placeStoneOnBoard);
+        }
+        
     });
+}
+
+function disableComputerField() {
+    computerField.removeEventListener("dragover", handleDragOver);
+    computerField.removeEventListener("dragenter", handleDragEnter);
+    computerField.removeEventListener("dragleave", handleDragLeave);
+    computerField.removeEventListener("drop", giveStoneToComputer);
 }
 
 
 
 
-
-
-
-async function loadGame() {
-    
-    const gameId = getGameIdFromURL();
-    console.log("ID z URL:", gameId);
-
-    if (!gameId) {
-        statusBox.innerHTML = '<span class="error">A parameter id is missing in URL.</span>';
-        return;
-    }
-
-    gameIdLabel.textContent = `Game ID: ${gameId}`; 
-
-    try {
-        const response = await fetch(`${quartoURL}/${gameId}`);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log("Načítané dáta hry:", data)
-        renderGame(data)
-        setupPhase(data)
-        
-       } 
-    
-    
-
-    
-    catch (error) {
-        console.error("Chyba pri načítaní hry:", error);
-        statusBox.innerHTML = `<span class="error">Loading game not successful: ${error.message}</span>`;
-        renderBoard({});}
-        
-    
-    
-    
-    }
-
-
-
-
 async function giveStoneToComputer(e) {
+    // based on Player move - giving Stone to Computer, this function send POST request to server
+    // render game and set up phase based on received data
     e.preventDefault();
     this.classList.remove("dragover");
 
@@ -235,7 +309,7 @@ async function giveStoneToComputer(e) {
     const data = await response.json();
     console.log("Načítané dáta hry:", data);
    
-
+    disableComputerField()
     renderGame(data);
     setupPhase(data);
 }
@@ -244,8 +318,11 @@ async function giveStoneToComputer(e) {
 
 
 async function placeStoneOnBoard(e) {
+    // based on Player move - placing stone on board, this function send POST request to server
+    // render game and set up phase based on received data
     e.preventDefault();
     this.classList.remove("dragover");
+
 
     const stoneId = e.dataTransfer.getData("text/plain");
     const field = this.id;
@@ -282,79 +359,18 @@ async function placeStoneOnBoard(e) {
 
 
 
-function setupPhase(data) {
-    const status = data.state.status;
-    const stoneForPlayer = data.state.stone_for_player;
-
-    if (status === 'player wins') {
-        statusBox.innerHTML = 'Player has won!';
-        return;
-    }
-
-    if (status === 'computer wins') {
-        statusBox.innerHTML = 'Computer has won!';
-        return;
-    }
-
-    if (status === 'no winner') {
-        statusBox.innerHTML = 'No winner.';
-        return;
-    }
-
-    if (status !== 'playing') {
-        console.error('Unknown game status:', status);
-        return;
-    }
-
-    if (stoneForPlayer === null) {
-        statusBox.innerHTML = `Player is giving a stone to Computer, Computer placing the stone.`;
-        enableGiveStonePhase();
-    } else {
-        statusBox.innerHTML = `Computer is given the stone to Player, Player placing.`;
-        enablePlaceStonePhase();
-    }
-}
-
-
-
-
-
-
-
-
-// 3. PART -  inicialization of program
-
-loadGame();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // //                2. part of JS code - Drag & Drop functionality for moving stones to board
 
-// /**
 //  * Táto premenná bude držať referenciu na element,
 //  * ktorý práve ťaháme.
-//  */
 let draggedStone = null;
-// /**
+
+
 //  * Táto funkcia sa spustí vo chvíli,
 //  * keď používateľ začne ťahať stone.
-//  * 
 // //  @param {DragEvent} e - drag event
-//  */
 function handleDragStart(e) {
     /**
      * this = konkrétny element .stone,
@@ -362,32 +378,24 @@ function handleDragStart(e) {
      */
     draggedStone = this;
     console.log(draggedStone)
-
-//     /**
 //      * Určuje, že chceme robiť presun.
 //      * Je to informácia pre browser.
-//      */
     e.dataTransfer.effectAllowed = "move";
-
-//     /**
 //      * Do dataTransfer uložíme id ťahaného elementu.
 //      * Neskôr pri drop vieme podľa id nájsť správny stone.
-//      */
     e.dataTransfer.setData("text/plain", this.id);
 }
+
+
+
 
 function handleDragEnd(e) {
     draggedStone = null;
 }
-
-// /**
 //  * Táto funkcia sa spustí opakovane,
 //  * keď je ťahaný element nad containerom.
-//  * 
 //  * Bez preventDefault() drop väčšinou nebude fungovať.
-//  * 
 //  * @param {DragEvent} e
-//  */
 function handleDragOver(e) {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
@@ -395,24 +403,20 @@ function handleDragOver(e) {
 
 
 
-// /**
+
 //  * Spustí sa, keď dragged element vstúpi nad container.
-//  * Použijeme to na vizuálny efekt.
-//  * 
+//  * Použijeme to na vizuálny efekt. 
 //  * @param {DragEvent} e
-//  */
 function handleDragEnter(e) {
     this.classList.add("dragover");
 }
 
 
 
-// /**
+
 //  * Spustí sa, keď dragged element opustí container.
 //  * Odstránime vizuálny efekt.
-//  * 
 //  * @param {DragEvent} e
-//  */
 function handleDragLeave(e) {
     this.classList.remove("dragover");
 }
@@ -420,40 +424,22 @@ function handleDragLeave(e) {
 
 
 
-// /**
 //  * Spustí sa, keď pustíme stone nad containerom.
 //  * Tu sa vykoná skutočný presun DOM elementu.
-//  * 
 //  * @param {DragEvent} e
-//  */
 function handleDrop(e) {
     e.preventDefault();
-
-//     /**
 //      * Odstránime zvýraznenie containera.
-//      */
     this.classList.remove("dragover");
-
-//     /**
 //      * Získame id elementu, ktorý bol uložený pri dragstart.
-//      */
     const stoneId = e.dataTransfer.getData("text/plain");
-
-//     /**
 //      * Podľa id nájdeme konkrétny DOM element.
-//      */
     const stoneElement = document.getElementById(stoneId);
 
-//     /**
 //      * appendChild() spraví skutočný presun DOM node.
-//      * 
 //      * Ak stone už niekde v DOM existuje, browser ho:
 //      * 1. odoberie zo starého rodiča
 //      * 2. vloží do nového rodiča
-//      * 
-//      * Toto NIE JE kópia.
-//      * Toto je reálny presun.
-//      */
     this.appendChild(stoneElement);
 }
 
@@ -461,6 +447,8 @@ function handleDrop(e) {
 
 
 
+// 3. PART -  inicialization of program
+loadGame();
 
 
 

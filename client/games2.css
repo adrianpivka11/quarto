@@ -93,7 +93,7 @@ h2 {
 
 .game-shell {
     display: grid;
-    grid-template-columns: 320px minmax(700px, 1fr);
+    grid-template-columns: 400px minmax(700px, 1fr);
     gap: 28px;
     align-items: start;
 }
@@ -115,7 +115,7 @@ h2 {
 }
 
 .stone-panel{
-    margin-top: 50px;
+    margin-top: 46px;
 }
 
 .stones-container {
@@ -173,6 +173,13 @@ h2 {
         inset 0 0 0 2px rgba(100, 150, 255, 0.28),
         inset 0 0 10px rgba(0,0,0,0.20);
 }
+
+
+.slot-block label{
+    font-size: 18px;
+}
+
+
 
 .board-zone {
     min-width: 0;

@@ -15,6 +15,9 @@ function getGameIdFromURL() {
 
 
 function renderBoard(data) {
+    // Args: fetched data
+    // based on fetch data render board with empty cells each with unique id
+    // if board data contains stones, build stone by buildStoneElementforBoard() and append it as child element to the cell that belongs
     boardEl.innerHTML = ""
     let stringForBoard = ``
     const boardJSON = data.state.board 
@@ -37,6 +40,7 @@ function renderBoard(data) {
     }}
 
 function renderStones(data) {
+    // just render stones:) by using buildStoneHTMLstring()
     containerStonesEl.innerHTML = "";
     const stonesJSON = data.state.free_stones;
     let stringForStones = ``;
@@ -50,6 +54,9 @@ function renderStones(data) {
 
 
 function buildStoneHTMLstring(stone) {
+    // Args: stone e.g. "1101"
+    // build stones based on id of stone e.g. "1101". by adding css classes
+    // Returns:  string `<div class="stone white small round minus" id="1101"></div>`
     let klass = `stone`;
 
     if (stone[0] === "0") klass += ` black`;
@@ -69,6 +76,9 @@ function buildStoneHTMLstring(stone) {
 
 
 function buildStoneElementforBoard(stone) {
+    // if stone is already placed, this function is used
+    // Args: stone e.g. "1101"
+    // Returns:  HTMLDivElement <div class="stone white small round minus" id="1101"></div>
     let klass = `stone`;
 
     if (stone[0] === "0") klass += ` black`;
@@ -101,6 +111,10 @@ function renderGame(data) {
 
 
 function enablePhaseOne() {
+    // removes addEventListeners by resetDropZones() to prevent duplicit addEventListeners in following rounds of game
+    // add drag & drop functionality to Stones and player1DropZone
+    // dropping stone calls back function placeStone(e, messageJSON)
+    // messageJSON is information about who is currently placing and giving
     console.log('PHASE ONE JUST BEGUN')
     const { boardCells } = resetDropZones();
     const messageJSON = {"player1_action": "placed_stone",
@@ -125,6 +139,8 @@ function enablePhaseOne() {
 
 
 function enablePhaseTwo() {
+    // same function as enablePhaseOne()
+    // differences: player2DropZone, messageJSON
     console.log('PHASE TWO JUST BEGUN')
     const { boardCells } = resetDropZones();
     const stones = document.querySelectorAll("#container-stones .stone");
@@ -146,6 +162,13 @@ function enablePhaseTwo() {
 
 
 function placeStone(e, messageJSON){
+    // Args: @param {DragEvent} e - drag event, messageJSON
+    // finds out to witch dropZone is stone placed
+    // the stone is removed from free stones appended to the dropZone .appendChild()
+    // removes drag & drop functionality from free stones
+    // add drag & drop functionality to the stone
+    // add drag & drop functionality to cells on the board which does not have childElemet = stone
+    // drop of the stones calls back function place(e, messageJSON)
     e.preventDefault();
 
     const dropZone = e.currentTarget;
@@ -172,18 +195,21 @@ function placeStone(e, messageJSON){
     }
 
     boardCells.forEach(cell => {
-        cell.addEventListener("dragover", handleDragOver);
-        cell.addEventListener("dragenter", handleDragEnter);
-        cell.addEventListener("dragleave", handleDragLeave);
-        cell.addEventListener("drop", (e) => place(e, messageJSON), { once: true });
-    
-    
+        if(!cell.firstElementChild){
+            cell.addEventListener("dragover", handleDragOver);
+            cell.addEventListener("dragenter", handleDragEnter);
+            cell.addEventListener("dragleave", handleDragLeave);
+            cell.addEventListener("drop", (e) => place(e, messageJSON), { once: true });
+        }
     });
 
 }
 
 
 async function place(e, messageJSON){
+    // place the stone - cell.appendChild(stoneEl)
+    // sends REQUEST to the server
+    // based on data renderGame() and setUpPhase()
     e.preventDefault();
 
     const cell = e.currentTarget;
@@ -229,6 +255,8 @@ async function place(e, messageJSON){
 
 
 function setupPhase(data) {
+    // based on fetched data set Phase 1 or Phase 2 if status === "playing"
+    // if status is "player1 wins", "player2 wins", "no winner", the game stops and status is being rendered
     const status = data.state.status;
     let player1Action = data.state.player1_action;
     let player2Action = data.state.player2_action;
@@ -287,6 +315,8 @@ function setupPhase(data) {
 
 
 async function loadGame() {
+    // main function that runs all Front-end
+    // getGameIdFromURL() and based on game id makes request on server to get data for renderGame(data) and setupPhase(data)
     
     const gameId = getGameIdFromURL();
     console.log("ID z URL:", gameId);
@@ -328,11 +358,12 @@ async function loadGame() {
 
 
 
-loadGame();
-
 
 
 function resetDropZones() {
+    // clears old addEventListeners from Elements
+    // Returns:  clear DOM Elements
+    // function prevents duplicates of addEventListeners during cycles of game
     const boardCells = document.querySelectorAll("#board .cell");
 
     player1DropZone.replaceWith(player1DropZone.cloneNode(true));
@@ -356,19 +387,22 @@ function resetDropZones() {
 
 
 
-// //                2. part of JS code - Drag & Drop functionality for moving stones to board
 
-// /**
+
+
+// //                Part of JS code - Drag & Drop functionality for moving stones to board
+
 //  * Táto premenná bude držať referenciu na element,
 //  * ktorý práve ťaháme.
-//  */
 let draggedStone = null;
-// /**
+
+
+
+
+
 //  * Táto funkcia sa spustí vo chvíli,
 //  * keď používateľ začne ťahať stone.
-//  * 
 // //  @param {DragEvent} e - drag event
-//  */
 function handleDragStart(e) {
     /**
      * this = konkrétny element .stone,
@@ -376,32 +410,24 @@ function handleDragStart(e) {
      */
     draggedStone = this;
     console.log(draggedStone)
-
-//     /**
 //      * Určuje, že chceme robiť presun.
 //      * Je to informácia pre browser.
-//      */
     e.dataTransfer.effectAllowed = "move";
-
-//     /**
 //      * Do dataTransfer uložíme id ťahaného elementu.
 //      * Neskôr pri drop vieme podľa id nájsť správny stone.
-//      */
     e.dataTransfer.setData("text/plain", this.id);
 }
+
+
+
 
 function handleDragEnd(e) {
     draggedStone = null;
 }
-
-// /**
 //  * Táto funkcia sa spustí opakovane,
 //  * keď je ťahaný element nad containerom.
-//  * 
 //  * Bez preventDefault() drop väčšinou nebude fungovať.
-//  * 
 //  * @param {DragEvent} e
-//  */
 function handleDragOver(e) {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
@@ -409,24 +435,20 @@ function handleDragOver(e) {
 
 
 
-// /**
+
 //  * Spustí sa, keď dragged element vstúpi nad container.
-//  * Použijeme to na vizuálny efekt.
-//  * 
+//  * Použijeme to na vizuálny efekt. 
 //  * @param {DragEvent} e
-//  */
 function handleDragEnter(e) {
     this.classList.add("dragover");
 }
 
 
 
-// /**
+
 //  * Spustí sa, keď dragged element opustí container.
 //  * Odstránime vizuálny efekt.
-//  * 
 //  * @param {DragEvent} e
-//  */
 function handleDragLeave(e) {
     this.classList.remove("dragover");
 }
@@ -434,40 +456,22 @@ function handleDragLeave(e) {
 
 
 
-// /**
 //  * Spustí sa, keď pustíme stone nad containerom.
 //  * Tu sa vykoná skutočný presun DOM elementu.
-//  * 
 //  * @param {DragEvent} e
-//  */
 function handleDrop(e) {
     e.preventDefault();
-
-//     /**
 //      * Odstránime zvýraznenie containera.
-//      */
     this.classList.remove("dragover");
-
-//     /**
 //      * Získame id elementu, ktorý bol uložený pri dragstart.
-//      */
     const stoneId = e.dataTransfer.getData("text/plain");
-
-//     /**
 //      * Podľa id nájdeme konkrétny DOM element.
-//      */
     const stoneElement = document.getElementById(stoneId);
 
-//     /**
 //      * appendChild() spraví skutočný presun DOM node.
-//      * 
 //      * Ak stone už niekde v DOM existuje, browser ho:
 //      * 1. odoberie zo starého rodiča
 //      * 2. vloží do nového rodiča
-//      * 
-//      * Toto NIE JE kópia.
-//      * Toto je reálny presun.
-//      */
     this.appendChild(stoneElement);
 }
 
@@ -477,12 +481,8 @@ function handleDrop(e) {
 
 
 
-
-
-
-
-
-
+// 3. PART -  inicialization of program
+loadGame();
 
 
 
