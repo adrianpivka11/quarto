@@ -168,6 +168,48 @@ body {
     color: #2a1c13;
 }
 
+.zen-button-loading {
+    pointer-events: none; /* zablokuje ďalšie kliky */
+    cursor: wait;
+
+    color: #3a2a1d;
+
+    background:
+        linear-gradient(145deg, #e7d49a, #d8b85f);
+
+    box-shadow:
+        0 6px 14px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.35);
+
+    filter: brightness(0.98);
+    transform: scale(0.98);
+
+    position: relative;
+}
+
+/* jemná pulzácia počas loadingu */
+.zen-button-loading {
+    animation: zenLoadingPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes zenLoadingPulse {
+    0% {
+        transform: scale(0.98);
+        filter: brightness(0.96);
+    }
+    50% {
+        transform: scale(1);
+        filter: brightness(1.03);
+    }
+    100% {
+        transform: scale(0.98);
+        filter: brightness(0.96);
+    }
+}
+
+
+
+
 /* mobile */
 @media (max-width: 768px) {
     .menu-panel {

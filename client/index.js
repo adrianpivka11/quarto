@@ -7,6 +7,8 @@ const quartoURLpvp = `${API_BASE_URL}/gamespvp`;
 const testEl = document.getElementById("test-loader");
 
 async function newGamePvC() {
+    pvcBtn.textContent = "Loading game"
+    pvcBtn.classList.add("zen-button-loading")
     try {
 
         console.log("Posielam request na:", quartoURL);
@@ -32,7 +34,10 @@ async function newGamePvC() {
 
 
 async function newGamePvP() {
+    pvpBtn.textContent = "Loading game"
+    pvpBtn.classList.add("zen-button-loading")
     try {
+        console.log("Posielam request na:", quartoURL);
         const res = await fetch(quartoURLpvp, { method: "POST" });
         const data = await res.json();
 
