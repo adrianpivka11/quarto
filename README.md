@@ -1,8 +1,8 @@
 # Quarto Game
 
 ## Overview
-**Play here:** https://quarto-game.netlify.app/
 Quarto Game is a small full-stack implementation of the board game Quarto.
+**Play here:** https://quarto-game.netlify.app/
 
 The project contains:
 - a Python backend built with FastAPI,
