@@ -113,5 +113,5 @@ Known Limitations
   small study project but would usually be split into multiple modules in a larger app.
 - PvP game flow depends on action markers (`player1_action`, `player2_action`) sent
   from the frontend.
-
+- Not playable on mobile devices
 
