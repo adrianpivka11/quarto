@@ -30,7 +30,7 @@ WINNING_LINES: dict[int, list[int]] = {
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5500",
     "http://localhost:5500",
-    "https://quarto-game.netlify.app/",
+    "https://quarto-game.netlify.app",
 ]
 
 
@@ -384,6 +384,12 @@ class PlaceStoneRequestPvP(BaseModel):
     field: int
     player1_action: str
     player2_action: str
+
+
+"""root endpoint for testing Render backend"""
+@app.get("/")
+def root():
+    return {"message": "Quarto API is running"}
 
 
 @app.post("/games")

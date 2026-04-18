@@ -1,7 +1,9 @@
 const pvcBtn = document.getElementById("startPvC-button");
 const pvpBtn = document.getElementById("startPvP-button");
-const quartoURL = "http://127.0.0.1:8000/games";
-const quartoURLpvp = "http://127.0.0.1:8000/gamespvp";  
+
+const API_BASE_URL = "https://quarto-api.onrender.com";
+const quartoURL = `${API_BASE_URL}/games`;
+const quartoURLpvp = `${API_BASE_URL}/gamespvp`;
 const testEl = document.getElementById("test-loader");
 
 async function newGamePvC() {

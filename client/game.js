@@ -1,4 +1,7 @@
-const quartoURL = "http://127.0.0.1:8000/games";
+
+const API_BASE_URL = "https://quarto-api.onrender.com";
+
+const quartoURL = `${API_BASE_URL}/games`;
 const statusBox = document.getElementById("status-box");
 const boardEl = document.getElementById("board");
 const gameIdLabel = document.getElementById("game-id-label");
