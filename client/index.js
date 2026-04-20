@@ -7,7 +7,7 @@ const quartoURLpvp = `${API_BASE_URL}/gamespvp`;
 const testEl = document.getElementById("test-loader");
 
 async function newGamePvC() {
-    pvcBtn.textContent = "Loading game"
+    pvcBtn.textContent = "Connecting to the server"
     pvcBtn.classList.add("zen-button-loading")
     try {
 
@@ -34,7 +34,7 @@ async function newGamePvC() {
 
 
 async function newGamePvP() {
-    pvpBtn.textContent = "Loading game"
+    pvpBtn.textContent = "Connecting to the server"
     pvpBtn.classList.add("zen-button-loading")
     try {
         console.log("Posielam request na:", quartoURL);
